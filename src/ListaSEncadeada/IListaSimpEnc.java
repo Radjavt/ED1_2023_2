@@ -14,6 +14,7 @@ public interface IListaSimpEnc<T> {
     public void RemoverInicio();
     public void RemoverFim();
     public void RemoverElemento(T Elemento);
+    public void InserirPartes(ListaSimpEnc<T> lista, int qtd);
     public String toString();
     public Iterator<T> iterator();
 

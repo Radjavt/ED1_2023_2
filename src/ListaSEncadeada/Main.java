@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 public class Main {
     public static void main(String[] args) {
-        ListaSimpEnc<Integer> lista = new ListaSimpEnc<>();
+        /*ListaSimpEnc<Integer> lista = new ListaSimpEnc<>();
         lista.InserirFim(5);
         lista.InserirFim(7);
         lista.InserirFim(3);
@@ -17,5 +17,7 @@ public class Main {
 
         System.out.println("\nLista depois do Insertion Sort:");
         lista.imprimirLista();
+
+   */
     }
 }

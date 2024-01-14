@@ -2,6 +2,7 @@ package ListaSEncadeada;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class ListaSimpEnc<T> implements IListaSimpEnc<T> {
     private NoSimpEnc<T> inicio;
@@ -10,12 +11,12 @@ public class ListaSimpEnc<T> implements IListaSimpEnc<T> {
 
     @Override
     public NoSimpEnc getInicio() {
-        return inicio;
+        return this.inicio;
     }
 
     @Override
     public NoSimpEnc getFim() {
-        return fim;
+        return this.fim;
     }
 
     @Override
@@ -62,12 +63,36 @@ public class ListaSimpEnc<T> implements IListaSimpEnc<T> {
     }
 
     @Override
-    public void Inserir(int pos, Object elemento) {
-
+    public void Inserir(int pos, T elemento) {
+        NoSimpEnc<T> novoNo = new NoSimpEnc<T>(elemento);
+        NoSimpEnc<T> aux = inicio;
+        if(pos<0 || pos>contElementos) {
+            throw new IndexOutOfBoundsException();
+        }else if(pos==0){
+            this.InserirInicio(elemento);
+        }else if(pos==contElementos){
+            this.InserirFim(elemento);
+        }else{
+            for(int i = 1; i < contElementos; i++){
+                if(i==pos){
+                    novoNo.setProximo(aux.getProximo());
+                    aux.setProximo(novoNo);
+                    contElementos++;
+                }
+                aux = aux.getProximo();
+            }
+        }
     }
 
     @Override
-    public boolean contem(Object elemento) {
+    public boolean contem(T elemento) {
+        NoSimpEnc<T> aux = inicio;
+        for(int i = 0; i < contElementos; i++){
+           if(aux.getElemento().equals(elemento)) {
+               return true;
+           }
+           aux = aux.getProximo();
+        }
         return false;
     }
 
@@ -81,19 +106,86 @@ public class ListaSimpEnc<T> implements IListaSimpEnc<T> {
 
     @Override
     public void RemoverFim() {
+        if (!estaVazia()){
+            NoSimpEnc<T> aux = inicio;
+            if (contElementos == 1){
+                this.clear();
+            } else {
+                for (int i = 0; i < contElementos-2;i++){
+                    aux = aux.getProximo();
+                }
+                aux.setProximo(null);
+                fim = aux;
+                contElementos--;
+            }
+        }
+    }
+
+    @Override
+    public void RemoverElemento(T Elemento) {
 
     }
 
     @Override
-    public void RemoverElemento(Object Elemento) {
+    public void InserirPartes(ListaSimpEnc<T> lista, int qtd)throws IllegalArgumentException{
+        if(qtd < 0){
+            throw new IllegalArgumentException("A quantidade deve ser um número não negativo.");
+        }
+        if(lista == null || lista.estaVazia()){
+           throw new IllegalArgumentException("A lista fornecida não pode ser nula ou vazia.");
+        }
+        InserirPartesRecursiva(lista.getInicio(), qtd);
+    }
+    private void InserirPartesRecursiva(NoSimpEnc<T> no,int qtd){
+        if(qtd > 0 && no != null){
+            InserirFim(no.getElemento());
 
+            InserirPartesRecursiva(no.getProximo(), qtd - 1);
+        }
+    }
+
+    private int posicao(T Elemento) {
+        NoSimpEnc<T> aux = inicio;
+        int pos =-1;
+        for (int i = 0; i < contElementos ; i++) {
+            if (aux.getElemento().equals(Elemento)){
+                return i;
+            }
+            aux = aux.getProximo();
+        }
+        return pos;
     }
 
     @Override
     public Iterator iterator() {
-        return null;
-    }
+        Iterator<T> myIterator = new Iterator<T>() {
 
+            NoSimpEnc posicao = inicio;
+
+            @Override
+            public boolean hasNext() {
+                if (posicao != null) {
+                    return true;
+                } else {
+                    this.posicao = inicio;
+                    return false;
+                }
+            }
+
+            @Override
+            public T next() throws NoSuchElementException {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                } else {
+                    T elemento = (T) posicao.getElemento();
+                    posicao = posicao.getProximo();
+                    return elemento;
+                }
+            }
+        };
+        return myIterator;
+    }
+/*
     public void InserirPartes(ListaSimpEnc<T> lista, int quantidade) {
         NoSimpEnc<T> no = lista.getInicio();
         for (int i = 0; i < quantidade && no != null; i++) {
@@ -150,4 +242,6 @@ public class ListaSimpEnc<T> implements IListaSimpEnc<T> {
 
         System.out.println();
     }
+
+ */
 }
