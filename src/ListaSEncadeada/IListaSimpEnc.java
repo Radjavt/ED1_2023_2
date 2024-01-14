@@ -11,7 +11,7 @@ public interface IListaSimpEnc<T> {
     public void InserirFim(T elemento);
     public void Inserir(int pos, T elemento);
     public boolean contem(T elemento);
-    public void RemoverInicio();
+    public T RemoverInicio();
     public void RemoverFim();
     public void RemoverElemento(T Elemento);
     public void InserirPartes(ListaSimpEnc<T> lista, int qtd);

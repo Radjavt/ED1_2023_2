@@ -97,11 +97,12 @@ public class ListaSimpEnc<T> implements IListaSimpEnc<T> {
     }
 
     @Override
-    public void RemoverInicio() {
+    public T RemoverInicio() {
         if(!estaVazia()){
             inicio = inicio.getProximo();
             contElementos--;
         }
+        return RemoverInicio();
     }
 
     @Override
@@ -127,22 +128,27 @@ public class ListaSimpEnc<T> implements IListaSimpEnc<T> {
     }
 
     @Override
-    public void InserirPartes(ListaSimpEnc<T> lista, int qtd)throws IllegalArgumentException{
-        if(qtd < 0){
-            throw new IllegalArgumentException("A quantidade deve ser um número não negativo.");
+    public void InserirPartes(ListaSimpEnc<T> lista, int quantidade) {
+        if (lista == null || quantidade <= 0) {
+            return;
         }
-        if(lista == null || lista.estaVazia()){
-           throw new IllegalArgumentException("A lista fornecida não pode ser nula ou vazia.");
-        }
-        InserirPartesRecursiva(lista.getInicio(), qtd);
-    }
-    private void InserirPartesRecursiva(NoSimpEnc<T> no,int qtd){
-        if(qtd > 0 && no != null){
-            InserirFim(no.getElemento());
 
-            InserirPartesRecursiva(no.getProximo(), qtd - 1);
-        }
+        // Chama o método auxiliar recursivo para iniciar a inserção
+        InserirPartesRecursivo(lista.getInicio(), quantidade);
     }
+
+    private void InserirPartesRecursivo(NoSimpEnc<T> noAtual, int quantidade) {
+        if (noAtual == null || quantidade <= 0) {
+            return;
+        }
+
+        // Insere o elemento atual na nova lista
+        this.InserirFim(noAtual.getElemento());
+
+        // Chama recursivamente para o próximo elemento
+        InserirPartesRecursivo(noAtual.getProximo(), quantidade - 1);
+    }
+
 
     private int posicao(T Elemento) {
         NoSimpEnc<T> aux = inicio;
@@ -154,6 +160,16 @@ public class ListaSimpEnc<T> implements IListaSimpEnc<T> {
             aux = aux.getProximo();
         }
         return pos;
+    }
+
+    public String toString() {
+        StringBuilder resultado = new StringBuilder();
+        NoSimpEnc<T> aux = inicio;
+        while (aux != null) {
+            resultado.append(aux.getElemento()).append(" ");
+            aux = aux.getProximo();
+        }
+        return resultado.toString().trim();
     }
 
     @Override
